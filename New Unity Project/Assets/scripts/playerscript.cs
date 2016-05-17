@@ -50,5 +50,8 @@ public class playerscript : MonoBehaviour {
 			}
 		}
 	
+		if (transform.position.y > 25.0f) {
+			transform.position = new Vector3 (transform.position.x, 25.0f, transform.position.z);
+		}
 	}
 }
