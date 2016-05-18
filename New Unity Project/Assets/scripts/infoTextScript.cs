@@ -26,7 +26,7 @@ public class infoTextScript : MonoBehaviour {
 	
 			timer += Time.deltaTime;
 
-			if (timer > 5.0f) {
+			if (timer > 2.0f) {
 				GetComponent<Text> ().enabled = false;
 				timer = 0.0f;
 			}

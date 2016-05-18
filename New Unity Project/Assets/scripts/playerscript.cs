@@ -8,7 +8,9 @@ public class playerscript : MonoBehaviour {
 
 	public int ammoCount;
 
-	public GameObject healthGUI;
+	public Image healthGUI;
+
+	public Sprite[] health;
 
 	public GameObject ammoText;
 
@@ -17,13 +19,28 @@ public class playerscript : MonoBehaviour {
 	void OnTriggerEnter(Collider other)
 	{
 		if (other.tag == "hurtsphere") {
-			playerHealth = playerHealth - 10;
-			//healthGUI.GetComponent<Rect> ().width -= 10;
+			if (playerHealth > 0) {
+				playerHealth = playerHealth - 1;
+				infoText.SendMessage ("ShowHints", "You have taken damage");
+			}
 		}
 		if (other.tag == "ammotemp") {
-			ammoCount = ammoCount + 5;
-			if (ammoCount > 10) {
-				ammoCount = 10;
+			if (ammoCount < 10) {
+				ammoCount = ammoCount + 5;
+				if (ammoCount > 10) {
+					ammoCount = 10;
+				}
+				infoText.SendMessage ("ShowHints", "You have gained ammo");
+			}
+
+		}
+		if (other.tag == "healthtemp") {
+			if (playerHealth < 10) {
+				playerHealth += 3;
+				if (playerHealth > 10) {
+					playerHealth = 10;
+				}
+				infoText.SendMessage ("ShowHints", "You have gained health");
 			}
 		}
 
@@ -32,8 +49,10 @@ public class playerscript : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
-		playerHealth = 100;
+		playerHealth = 10;
 		ammoCount = 10;
+
+		infoText.SendMessage ("ShowHints", "Left Mouse Click to expend ammo");
 	
 	}
 	
@@ -42,11 +61,14 @@ public class playerscript : MonoBehaviour {
 
 		ammoText.GetComponent<Text> ().text = "" + ammoCount;
 
+		healthGUI.sprite = health[playerHealth];
+
 
 		if (Input.GetMouseButtonDown (0)) {
 			Debug.Log ("Pressed left click.");
 			if (ammoCount > 0) {
 				ammoCount--;
+				infoText.SendMessage ("ShowHints", "ammo expended");
 			}
 		}
 	

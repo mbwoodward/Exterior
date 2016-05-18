@@ -22,6 +22,7 @@ public class pickupScript : MonoBehaviour {
 				//GameObject.Find ("Platform").GetComponent<panelScript>().yellowKey = true;
 				//AudioSource.PlayClipAtPoint(pickupSound, transform.position);
 				itemGUI.SetActive (true);
+				infoText.SendMessage ("ShowHints", "key GUI activated");
 				Destroy(gameObject);
 
 			}
@@ -30,6 +31,7 @@ public class pickupScript : MonoBehaviour {
 			{
 				//AudioSource.PlayClipAtPoint(pickupSound, transform.position);
 				itemGUI.SetActive (true);
+				infoText.SendMessage ("ShowHints", "sky GUI activated");
 				Destroy(gameObject);
 				
 			}
@@ -37,6 +39,7 @@ public class pickupScript : MonoBehaviour {
 			{
 				//AudioSource.PlayClipAtPoint(pickupSound, transform.position);
 				itemGUI.SetActive (true);
+				infoText.SendMessage ("ShowHints", "apple GUI activated");
 				Destroy(gameObject);
 				
 			}
