@@ -15,8 +15,22 @@ public class playerscript : MonoBehaviour {
 	public GameObject ammoText;
 
 	public GameObject infoText;
+    
+    public float bulletSpeed = 600;
 
-	void OnTriggerEnter(Collider other)
+    public Rigidbody bullet;
+
+    public Transform firePoint;
+
+    public float maxForce;
+    public float fireRate;
+    float fireTime = 0.0f;
+
+    public static bool canFire = false;
+
+
+
+        void OnTriggerEnter(Collider other)
 	{
 		if (other.tag == "hurtsphere") {
 			if (playerHealth > 0) {
@@ -24,7 +38,18 @@ public class playerscript : MonoBehaviour {
 				infoText.SendMessage ("ShowHints", "You have taken damage");
 			}
 		}
-		if (other.tag == "ammotemp") {
+        if (other.tag == "EnemyBullet")
+        {
+            if (playerHealth > 0)
+            {
+                playerHealth = playerHealth - 1;
+                infoText.SendMessage("ShowHints", "You have taken damage");
+            }
+            Destroy(other.gameObject);
+
+
+        }
+        if (other.tag == "ammotemp") {
 			if (ammoCount < 10) {
 				ammoCount = ammoCount + 5;
 				if (ammoCount > 10) {
@@ -65,9 +90,20 @@ public class playerscript : MonoBehaviour {
 
 
 		if (Input.GetMouseButtonDown (0)) {
-			Debug.Log ("Pressed left click.");
-			if (ammoCount > 0) {
-				ammoCount--;
+            //Debug.Log ("Pressed left click.");
+            if ((Time.time > fireTime) && (ammoCount > 0))
+            {
+
+                //Debug.Log ("Player fires");
+
+                Rigidbody tempBullet = Instantiate(bullet, firePoint.position, firePoint.rotation) as Rigidbody;
+
+                tempBullet.velocity = transform.forward * maxForce;
+
+                fireTime = Time.time + fireRate;
+
+                ammoCount--;
+
 				infoText.SendMessage ("ShowHints", "ammo expended");
 			}
 		}
