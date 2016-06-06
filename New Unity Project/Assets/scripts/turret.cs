@@ -56,6 +56,8 @@ public class turret : MonoBehaviour
 
                 transform.LookAt(myTarget);
 
+
+
                 Rigidbody temBullet = Instantiate(bullet, firePoint.position, firePoint.rotation) as Rigidbody;
 
                 temBullet.velocity = transform.forward * maxForce;
