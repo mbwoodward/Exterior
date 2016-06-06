@@ -11,6 +11,9 @@ TagManager:
   - terrain
   - turret
   - Bullet
+  - mesh
+  - chase
+  - mesh2
   layers:
   - Default
   - TransparentFX

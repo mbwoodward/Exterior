@@ -38,6 +38,14 @@ public class playerscript : MonoBehaviour {
 				infoText.SendMessage ("ShowHints", "You have taken damage");
 			}
 		}
+        if(other.tag == "chase")
+        {
+            if(playerHealth > 0)
+            {
+                playerHealth = playerHealth - 1;
+                infoText.SendMessage("ShowHints", "You have taken damage");
+            }
+        }
         if (other.tag == "EnemyBullet")
         {
             if (playerHealth > 0)

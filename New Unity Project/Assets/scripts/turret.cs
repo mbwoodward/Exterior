@@ -13,6 +13,7 @@ public class turret : MonoBehaviour
     public float maxForce;
     private float fireTime = 0.0f;
     public float turretHealth, minHealth, maxHealth;
+    public Texture calm, enraged;
 
     void OnTriggerEnter(Collider other)
     {
@@ -31,6 +32,7 @@ public class turret : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        GameObject.FindWithTag("mesh").GetComponent<SkinnedMeshRenderer>().material.mainTexture = calm;
 
         turretHealth = Random.Range(minHealth, maxHealth);
 
@@ -46,7 +48,7 @@ public class turret : MonoBehaviour
 
         if (dist <= attackDistance)
         {
-
+            GameObject.FindWithTag("mesh").GetComponent<SkinnedMeshRenderer>().material.mainTexture = enraged;
             //GetComponent<SmoothLookAt>().enabled = true;
 
             if (Time.time > fireTime)
@@ -66,6 +68,7 @@ public class turret : MonoBehaviour
         }
         else {
 
+            GameObject.FindWithTag("mesh").GetComponent<SkinnedMeshRenderer>().material.mainTexture = calm;
             //GetComponent<SmoothLookAt>().enabled = false;
         }
 
