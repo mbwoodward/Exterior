@@ -28,9 +28,13 @@ public class playerscript : MonoBehaviour {
 
     public static bool canFire = false;
 
+    void LoseHealth(int Amount)
+    {
 
+        playerHealth -= Amount;
+    }
 
-        void OnTriggerEnter(Collider other)
+    void OnTriggerEnter(Collider other)
 	{
 		if (other.tag == "hurtsphere") {
 			if (playerHealth > 0) {

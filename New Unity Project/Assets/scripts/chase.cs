@@ -3,13 +3,20 @@ using System.Collections;
 
 public class chase : MonoBehaviour
 {
-
-    public Transform target; //the enemy's target
+    NavMeshAgent agent;
+    string state = "patrol";
+    public GameObject[] patrolPoints;
+    int currentPoint = 0;
+    Transform playerPos; //the enemy's target
     public float moveSpeed; //move speed
     public float rotationSpeed; //speed of turning
-    public float attackDistance;
+    public float chaseDistance, attackDistance;
+    float playerDistance;
+    public float attackRate;
+    float attackTime = 0.0f;
     public float chaseHealth, minHealth, maxHealth;
     public Texture calm, enraged;
+    public Animator myAnimator;
 
     void OnTriggerEnter(Collider other)
     {
@@ -25,18 +32,17 @@ public class chase : MonoBehaviour
 
     }
 
-
-    Transform myTransform; //current transform data of this enemy
-
-
-    void Awake()
-    {
-        myTransform = transform; //cache transform data for easy access/preformance
-    }
-
-
     void Start()
     {
+
+        agent = GetComponent<NavMeshAgent>();
+
+        agent.destination = patrolPoints[currentPoint].transform.position;
+
+        playerPos = GameObject.FindWithTag("Player").transform;
+
+        myAnimator = GetComponent<Animator>();
+
         GameObject.FindWithTag("mesh2").GetComponent<SkinnedMeshRenderer>().material.mainTexture = calm;
 
         chaseHealth = Random.Range(minHealth, maxHealth);
@@ -46,33 +52,99 @@ public class chase : MonoBehaviour
     void Update()
     {
 
-        float dist = Vector3.Distance(target.position, transform.position);
+        playerDistance = Vector3.Distance(transform.position, playerPos.position);
 
-        if (dist <= attackDistance)
+        if (state == "patrol")
         {
-            //rotate to look at the player
-            myTransform.rotation = Quaternion.Slerp(myTransform.rotation,
-            Quaternion.LookRotation(target.position - myTransform.position), rotationSpeed * Time.deltaTime);
+            if (playerDistance <= chaseDistance)
+            {
+                state = "chase";
 
+                agent.destination = playerPos.position;
 
-            //move towards the player
-            myTransform.position += myTransform.forward * moveSpeed * Time.deltaTime;
+                agent.speed = 4;
 
-            GameObject.FindWithTag("mesh2").GetComponent<SkinnedMeshRenderer>().material.mainTexture = enraged;
-            //GetComponent<SmoothLookAt>().enabled = true;
+                GameObject.FindWithTag("mesh2").GetComponent<SkinnedMeshRenderer>().material.mainTexture = enraged;
+                //GetComponent<SmoothLookAt>().enabled = true;
 
-        }
-        else {
+            }
+            if (agent.remainingDistance < .01)
+            {
 
-            GameObject.FindWithTag("mesh2").GetComponent<SkinnedMeshRenderer>().material.mainTexture = calm;
-            //GetComponent<SmoothLookAt>().enabled = false;
-        }
+                if (currentPoint < (patrolPoints.Length - 1))
+                {
 
-        if (chaseHealth <= 0.0f)
+                    currentPoint++;
+
+                }
+                else {
+
+                    currentPoint = 0;
+
+                }
+
+                agent.destination = patrolPoints[currentPoint].transform.position;
+            }
+        } else if (state == "chase")
         {
 
-            Destroy(gameObject);
+            agent.destination = playerPos.position;
+
+            if (playerDistance > chaseDistance)
+            {
+
+                state = "patrol";
+
+                agent.Stop();
+                GameObject.FindWithTag("mesh2").GetComponent<SkinnedMeshRenderer>().material.mainTexture = calm;
+                agent.destination = patrolPoints[currentPoint].transform.position;
+                agent.Resume();
+                agent.speed = 2;
+
+            }
+
+            if (playerDistance < attackDistance)
+            {
+
+                state = "attack";
+
+                agent.Stop();
+
+
+
+            }
+        }
+        else if (state == "attack")
+        {
+
+            if (playerDistance > attackDistance)
+            {
+
+                state = "chase";
+
+                agent.speed = 4;
+
+                agent.Resume();
+
+
+            }
+
+            if (Time.time > attackTime)
+            {
+
+                myAnimator.Play("chase");
+                GameObject.FindWithTag("Player").SendMessage("LoseHealth", 1);
+                attackTime = Time.time + attackRate;
+
+            }
 
         }
+
+            if (chaseHealth <= 0.0f)
+            {
+
+                Destroy(gameObject);
+
+            }
     }
 }
