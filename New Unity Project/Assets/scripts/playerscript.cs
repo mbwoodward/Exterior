@@ -15,12 +15,16 @@ public class playerscript : MonoBehaviour {
 	public GameObject ammoText;
 
 	public GameObject infoText;
+
+	public GameObject Key;
     
     public float bulletSpeed = 600;
 
     public Rigidbody bullet;
 
     public Transform firePoint;
+
+	public bool key = false;
 
     public float maxForce;
     public float fireRate;

@@ -116,6 +116,7 @@ GameObject:
   - 135: {fileID: 13522888}
   - 23: {fileID: 2305918}
   - 54: {fileID: 5434336}
+  - 114: {fileID: 11442542}
   m_Layer: 0
   m_Name: enemybullet
   m_TagString: EnemyBullet
@@ -439,6 +440,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   multiplier: 1
+--- !u!114 &11442542
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 159718}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58ad131f6e9f54ad9a3ddb5f19660639, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &11448102
 MonoBehaviour:
   m_ObjectHideFlags: 1

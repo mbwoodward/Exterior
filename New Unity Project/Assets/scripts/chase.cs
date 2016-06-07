@@ -17,6 +17,16 @@ public class chase : MonoBehaviour
     public float chaseHealth, minHealth, maxHealth;
     public Texture calm, enraged;
     public Animator myAnimator;
+	public GameObject mesh;
+
+
+
+	IEnumerator wait()
+	{
+		myAnimator.Play("chase");
+		yield return new WaitForSeconds(1.5f);
+		GameObject.FindWithTag("Player").SendMessage("LoseHealth", 1);
+	}
 
     void OnTriggerEnter(Collider other)
     {
@@ -43,7 +53,7 @@ public class chase : MonoBehaviour
 
         myAnimator = GetComponent<Animator>();
 
-        GameObject.FindWithTag("mesh2").GetComponent<SkinnedMeshRenderer>().material.mainTexture = calm;
+        mesh.GetComponent<SkinnedMeshRenderer>().material.mainTexture = calm;
 
         chaseHealth = Random.Range(minHealth, maxHealth);
 
@@ -56,15 +66,19 @@ public class chase : MonoBehaviour
 
         if (state == "patrol")
         {
+
+			myAnimator.Play("Idle");
             if (playerDistance <= chaseDistance)
             {
+
+
                 state = "chase";
 
                 agent.destination = playerPos.position;
 
                 agent.speed = 4;
 
-                GameObject.FindWithTag("mesh2").GetComponent<SkinnedMeshRenderer>().material.mainTexture = enraged;
+				mesh.GetComponent<SkinnedMeshRenderer>().material.mainTexture = enraged;
                 //GetComponent<SmoothLookAt>().enabled = true;
 
             }
@@ -96,7 +110,7 @@ public class chase : MonoBehaviour
                 state = "patrol";
 
                 agent.Stop();
-                GameObject.FindWithTag("mesh2").GetComponent<SkinnedMeshRenderer>().material.mainTexture = calm;
+                mesh.GetComponent<SkinnedMeshRenderer>().material.mainTexture = calm;
                 agent.destination = patrolPoints[currentPoint].transform.position;
                 agent.Resume();
                 agent.speed = 2;
@@ -130,21 +144,16 @@ public class chase : MonoBehaviour
             }
 
             if (Time.time > attackTime)
-            {
-
-                myAnimator.Play("chase");
-                GameObject.FindWithTag("Player").SendMessage("LoseHealth", 1);
+            {				
+				StartCoroutine (wait());      
                 attackTime = Time.time + attackRate;
-
             }
 
         }
 
             if (chaseHealth <= 0.0f)
             {
-
                 Destroy(gameObject);
-
             }
     }
 }
